@@ -2,7 +2,7 @@ import Dependencies._
 import ReleaseTransformations._
 
 lazy val `sbt-release` = project in file(".")
-publishMavenStyle := false
+publishMavenStyle := true
 
 val scalaVersionBuild = "2.12.6"
 val organizationName ="com.avertia"
