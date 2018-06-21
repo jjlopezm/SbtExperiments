@@ -1,6 +1,9 @@
 import Dependencies._
+import ReleaseTransformations._
 
-val versionBuild = "0.1.0-SNAPSHOT"
+lazy val `sbt-release` = project in file(".")
+publishMavenStyle := false
+
 val scalaVersionBuild = "2.12.6"
 val organizationName ="com.avertia"
 
@@ -28,8 +31,7 @@ publishTo := {
   .settings(
     inThisBuild(List(
       organization := organizationName,
-      scalaVersion := scalaVersionBuild,
-      version := versionBuild
+      scalaVersion := scalaVersionBuild
     )),
     name := "MyFirstSbtScala",
     organization := "com.avertia",
@@ -44,3 +46,19 @@ assemblyMergeStrategy in assembly := {
   case PathList("META-INF", "MANIFEST.MF") => MergeStrategy.discard
   case _ => MergeStrategy.first
 }
+
+// release steps
+releaseProcess := Seq[ReleaseStep](
+  checkSnapshotDependencies,
+  inquireVersions,
+  runClean,
+  runTest,
+  setReleaseVersion,
+  commitReleaseVersion,
+  tagRelease,
+  releaseStepCommandAndRemaining("+publishSigned"),
+  setNextVersion,
+  commitNextVersion,
+  releaseStepCommandAndRemaining("sonatypeReleaseAll"),
+  pushChanges
+)
